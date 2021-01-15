@@ -1,0 +1,850 @@
+//header files 	
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+#include<dos.h>
+#include<stdlib.h>
+
+//structure for customer
+struct customer1
+    {
+	int ID;
+	char Name[20];
+	char Address[40];
+	char phone_number[20];
+	char Citizenship_number[15];
+	char Gender[20];
+	char User_Name[20];
+	char Password[15];
+	char Retype_password[15];
+	char Account_number[30];
+	char Retype_account_number[30];
+	char Account_type[10];
+	char Email_account[30];
+	float accountbalance;
+	float depositamount,withdrawamount;
+     }cust;
+
+//functions for admin
+void main(void);
+void admin_menu(void);
+void view_customers_list(void);
+void view_customers_transaction(void);
+void remove_existing_customer(void);
+
+//functions for customer
+void customer_section(void);
+void customer_login(void);
+void customer_menu(void);
+void register_new_account(void);
+void view_personal_information(void);
+void update_personal_information(void);
+void view_account_detail(void);
+void manage_transactions(void);
+void withdraw_amount(void);
+void deposit_amount(void);
+void view_transactions(void);
+
+//open files
+
+    char str;
+    void main()
+       {
+	  char j,ex;
+	  char logout;
+	  char user_name[30],password[20];
+	  clrscr();
+	  main:
+	  int a;
+	      printf("\t=================================================================\n");
+	      printf("\t||\tWelcome to Malaysian Urban Bank Management System      ||\n");
+	      printf("\t=================================================================\n\n");
+	      printf("\t1.Admin\n \t2.Customer\n\t3.Exit\n");
+	      printf("\n\tEnter 1 for admin section and 2 for customer section : ");
+	      scanf("%d",&a);
+	      csttry:
+	       switch (a)
+		  {
+		      case 1:
+		      clrscr();
+		      printf("\t====================\n\t\tADMIN\n\t====================\n\n"); //.....Entry of admin
+			 do
+			     {
+				 printf("\tPlease enter your username:");
+				 scanf("%s",&user_name);
+				 printf("\tEnter your password:");
+			 int p=0;
+			 do
+			      {
+				 password[p]=getch();
+				 if(password[p]!='\r')
+				     {
+				       printf("*");//hides the character with *
+				     }
+				 p++;
+			       }
+			  while (password[p-1]!='\r');
+			  password [p-1]='\0';
+	     if (strcmp(user_name,"admin")==0 &&strcmp(password,"admin")==0)
+		  {
+admin_menu();
+}
+	    else
+		  {
+		       printf("\n\n\tIncorrect username or password!");
+		       printf("\n\n\tDo you want to try again? (y/n):");
+		       scanf("%s",&j);
+		       if(j=='y' || j=='Y')
+			{
+			  clrscr();
+			  goto csttry;
+			  }
+		       else
+			 {
+			  clrscr();
+			  main();
+			  }
+		  }
+      }
+	     while(j=='y' || j=='Y');
+	    break;
+
+     case 2:
+     clrscr();
+     customer_section();
+     break;
+
+     case 3:
+     printf("\n\n\tClick any button to exit : ");
+     scanf("%s",&ex);
+     exit(0);
+
+     default:
+     clrscr();
+     main();
+     }
+     }
+     getch();
+
+
+void admin_menu()
+   {
+
+		     int b;
+		     char logout;
+		     clrscr();
+		     printf("\n\n\t===== Welcome Admin =====\n\n");
+		     printf("\tWhat you want to do?\n");
+		     printf("\t1.View customer's list\n");
+		     printf("\t2.View customer's transaction\n");
+		     printf("\t3.Remove existing customer\n");
+		     printf("\t4.Logout\n");
+		     printf("\n\tChoose any number between 1-4 : ");
+		     scanf ("%d",&b);
+		       switch (b)
+			  {
+			     case 1:
+			     view_customers_list();
+			     break;
+
+			     case 2:
+			     view_customers_transaction();
+			     break;
+
+			     case 3:
+			     remove_existing_customer();
+			     break;
+
+			     case 4:
+			     printf("\n\tLogout\n");
+	     do
+		 {
+		     printf("\n\n\tAre you sure you want to logout? (y/n): ");
+		     scanf("%s",&logout);
+		     if(logout=='y' || logout=='Y')
+			{
+		  clrscr();
+			  main();
+			}
+		else
+		{
+		 clrscr();
+		 admin_menu();
+		}
+		 }
+	     while(logout!='y' || logout!='Y');
+	     break;
+
+			     default:
+			     clrscr();
+			     admin_menu();
+			  }
+		  }
+
+
+
+
+void customer_section()//function open for customer section
+   {
+      int c;
+	      printf("\t============\n\tCUSTOMER\n\t============\n\n");
+	      printf("\tWhat you want to do?\n");
+	      printf("\t1.Register or create a new account (If you do not have an account.)\n");
+	      printf("\t2.Login (If you have already an account)\n");
+	      printf("\t3.Exit(go to the main user)\n\n");
+	      printf("\tChoose any number:");
+	      scanf("%d",&c);
+
+	      switch(c)
+		 {
+		    case 1:
+		    clrscr();
+		    register_new_account();
+		    break;
+
+		    case 2:
+		    clrscr();
+		    customer_login();
+		    break;
+
+		    default:
+		    clrscr();
+		    main();
+		 }
+	      getch();
+   }
+
+
+void customer_login()//function open for customer login
+	{
+	     clrscr();
+		  char User_Name[30];
+		  char Password[15];
+		  char c;
+		       FILE *customers;
+
+			   printf("\t============================================\n");
+			   printf("\t\tLogin to customer section:\n");
+			   printf("\t============================================\n");
+			   printf("\n\tPlease enter your username:");
+			   scanf("%s",&User_Name);
+
+			   printf("\n\tEnter your password:");
+			   int p=0;
+			   do
+			       {
+				   Password[p]=getch();
+				   if(Password[p]!='\r')
+				       {
+					   printf("*");//converts the password character into *
+				       }
+				   p++;
+				}
+			   while (Password[p-1]!='\r');
+			   Password [p-1]='\0';
+
+		  customers=fopen("Regcustomer.txt","r");
+		  while(fread(&cust,sizeof(cust),1,customers)==1)
+		     {
+			 if(strcmp(User_Name,cust.User_Name)==0 &&strcmp(Password,cust.Password)==0)
+			     {
+				 customer_menu();//opens customer menu
+				 break;
+			     }
+		     }
+	     clrscr();
+	     customer_section();
+	}
+
+
+void customer_menu()//function to open customer menu
+	{
+	   clrscr();
+	       char selection,choose;
+		    printf("\t==================== Welcome %s ====================\n\n",cust.Name);
+		    printf("\tWhat you want to do?\n");
+		    printf("\t1.View personal information\n");
+		    printf("\t2.Update personal information\n");
+		    printf("\t3.View Account detail\n");
+		    printf("\t4.Manage Transactions\n");
+		    printf("\t5.View Transactions\n");
+		    printf("\t6.Logout\n");
+		    printf("\tChoose any number:");
+		    scanf("%d",&selection);
+
+		    switch(selection)
+		     {
+		       case 1:
+		       view_personal_information();
+		       break;
+
+		       case 2:
+		       update_personal_information();
+		       break;
+
+		       case 3:
+		       view_account_detail();
+		       break;
+
+		       case 4:
+		       manage_transactions();
+		       break;
+
+		       case 5:
+		       view_transactions();
+		       break;
+
+		       case 6:
+	     do
+		 {
+		     printf("\n\n\tAre you sure you want to logout? (y/n): ");
+		     scanf("%s",&choose);
+		     if(choose=='y' || choose=='Y')
+			{
+		  clrscr();
+			  main();
+			}
+		else
+		{
+		 clrscr();
+		 customer_menu();
+		}
+		 }
+	     while(choose!='y' || choose!='Y');
+
+		       break;
+
+		       default:
+		       clrscr();
+		       customer_menu();//returns to customer section
+		       break;
+
+		       }
+
+		    getch();
+		       }
+
+
+
+
+
+
+void register_new_account()//function to register new customer account
+	{
+	  char login;
+	     printf("\tRegister or create your new account here:\n\n");
+	     printf("\tEnter Your account ID:");
+	     scanf("%d",&cust.ID);
+	     fflush(stdin);
+	     printf("\tEnter your name:");
+	     scanf("%s",&cust.Name);
+	     printf("\tEnter your address:");
+	     scanf("%s",&cust.Address);
+	     printf("\tEnter your phone number:");
+	     scanf("%s",&cust.phone_number);
+	     printf("\tEnter your citizenship number:");
+	     scanf("%s",&cust.Citizenship_number);
+	     printf("\tEnter your gender (Male or Female):");
+	     scanf("%s",&cust.Gender);
+	     printf("\tEnter your User name:");
+	     scanf("%s",&cust.User_Name);
+	     printf("\tEnter your password:");
+	     scanf("%s",&cust.Password);
+	     printf("\tRe-enter your password:");
+	     scanf("%s",&cust.Retype_password);
+	     printf("\tEnter your account number:");
+	     scanf("%s",&cust.Account_number);
+	     printf("\tRetype account number:");
+	     scanf("%s",&cust.Retype_account_number);
+	     printf("\tWhich type of account do you want to open?\n\tsaving/current : ");
+	     scanf("%s",&cust.Account_type);
+	     printf("\tEnter your E-mail account:");
+	     scanf("%s",&cust.Email_account);
+	     printf("\tYour balance is by default set to 0.\n");
+	     cust.accountbalance=0;
+	     flushall();
+
+	     //open file to save all the data
+		 FILE *customers;
+		     customers=fopen("Regcustomer.txt","ab+");//saves data as Regcusto
+		     fwrite(&cust, sizeof(cust),1,customers);
+		     fclose(customers);//closes the file
+
+		     printf("\tYour new account has been registered successfully.\n");
+		     printf("\tNow you can login to your account.\n");
+		     do
+		 {
+		     printf("\n\n\tDo you want to login now? (y/n): ");
+		     scanf("%s",&login);
+		     if(login=='y' || login=='Y')
+			{
+		  clrscr();
+			  customer_login();
+			}
+		else
+		{
+		 clrscr();
+		 customer_section();
+		}
+		 }
+	     while(login!='y' || login!='Y');
+
+	     getch();
+	}
+
+
+void view_customers_list()//function to view customers list
+       {
+	    FILE *customers;
+	  char backadmin;
+	    clrscr ();
+		 printf("\tCustomer's list:\n");
+
+		 customers=fopen("Regcustomer.txt","ab+");//opens the save file
+		 while(fread(&cust,sizeof(cust),1,customers)==1)//read the data from file
+		 printf("\n\tID:%d\n\tName:%s\n\tAddress:%s\n\tPhone number:%s\n\tCitizenship number:%s\n\tUser name:%s\n\tAccount number:%s\n\tEmail account:%s\n",cust.ID,cust.Name,cust.Address,cust.phone_number,cust.Citizenship_number,cust.User_Name,cust.Account_number,cust.Email_account);
+		 fclose(customers);//closes the file
+
+	     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&backadmin);
+		     if(backadmin=='b' || backadmin=='B')
+			{
+		  clrscr();
+			  admin_menu();
+			}
+		else
+		{
+		 clrscr();
+		 view_customers_list();
+		}
+		 }
+	     while(backadmin!='b' || backadmin!='B');
+
+	    getch();
+       }
+
+
+
+void view_customers_transaction()
+  {
+     FILE *customers;
+     char ta;
+     char NM[30];
+     //int ide;
+     clrscr();
+//printf("\n\tEnter the customer ID of whomm you want to view transaction:");
+//scanf("%s",&ide);//ide means ID
+printf("\n\tEnter the customer name:");
+scanf("%s",&NM);//NM means name
+customers=fopen("Regcustomer.txt","ab+");
+while(fread(&cust,sizeof(cust),1,customers)==1)
+{
+if(strcmp(NM,cust.Name)==0)
+{
+printf("\n\tRecently,");
+printf("\n\n\twithdrawn amount: %f",cust.depositamount);
+printf("\n\tdeposited amount: %f",cust.withdrawamount);
+printf("\n\n\tTotal balance: %f",cust.accountbalance);
+}
+else
+{
+printf("\n\n\tEntered Name doesn't exist.");
+}
+}
+printf("\n\n\tDo you want to enter the customer name again? (y/n): ");
+scanf("%s",&ta);//ta means try again
+if(ta=='y' || ta=='Y')
+{
+clrscr();
+view_customers_transaction();
+}
+else
+{
+clrscr();
+admin_menu();
+}
+getch();
+}
+
+
+
+
+void remove_existing_customer()//function to remove existing customer from the file
+	{
+	     FILE *customers, *temp;//new file temp
+	     char uname[30];
+	     char choice;
+		 printf("\tRemove the customer from the list:\n\n");
+		 printf("\tEnter Name to delete:");
+		 scanf("%s",&uname);
+
+		 customers=fopen("Regcustomer.txt","r");//opens the file for reading
+
+		 while (fread(&cust,sizeof(cust),1,customers))//reads the data from file
+		     {
+			  if(strcmp(cust.Name,uname)!=0)
+			       {
+				   temp=fopen("temp.txt","a");//opens new files and allows to append
+				   fwrite(&cust,sizeof(cust),1,temp);//writes all the data in new file
+				   fclose(temp);//closes new file
+				}
+		      }
+		 fclose(customers);
+		 remove("Regcustomer.txt");//removes original file
+		 if (rename("temp.txt","Regcustomer.txt")==0);//renamed it
+		      {
+			  printf("\n\tThis name has been deleted from the list.\n");
+		      }
+		 fflush(stdin);//flushes all the unnecessary data in the files
+		 do
+		      {
+			   printf("\n\n\tClick b or B to go back to view customers list.");
+			   scanf("%c",&choice);
+			   if(choice=='b' || choice=='B')
+			      {
+clrscr();
+				 view_customers_list();
+			       }
+else
+   {
+       clrscr();
+       admin_menu();
+    }
+		      }
+		 while(choice!='b' || choice!='B');
+	}
+
+
+
+void manage_transactions()//function to manage transactions
+	{
+	     FILE *customers;
+clrscr();
+		  int m;
+		  printf("\t===== Manage transactions =====\n\n");
+		  printf("\tWhat do you want to do?\n\n");
+		  printf("\t1.withdrawn amount in the account\n");
+		  printf("\t2.deposite amount from account\n");
+		  printf("\tChoose either 1 or 2 : ");
+		  scanf("%d",&m);
+
+		     switch (m)
+		       {
+			  case 1:
+			  deposit_amount();
+			  break;
+
+			  case 2:
+			  withdraw_amount();
+			  break;
+
+			  default:
+			  clrscr();
+			  manage_transactions();
+		       }
+		   getch();
+	}
+
+
+void deposit_amount()//function to open and allow deposit amount in the account
+       {
+	   char acc_num[30];
+	   char cstmenu;
+	       FILE *customers;
+		   customers=fopen("Regcustomer.txt","ab+");
+		   printf("\n\tEnter your account number:");
+		   scanf("%s",&acc_num);
+
+	   while(fread(&cust,sizeof(cust),1,customers))
+	       {
+		   if(strcmp(acc_num,cust.Account_number)==0)
+		      {
+			 printf("\n\tYour balance is: %f",cust.accountbalance);
+			 customers=fopen("Regcustomer.txt","w");
+			 printf("\n\n\tEnter the amount you would like to deposit:");
+			 scanf("%f",&cust.depositamount);
+			 cust.accountbalance=cust.accountbalance+cust.depositamount;//adds the deposited amount in actual amount of account
+			 fwrite(&cust, sizeof(cust),1,customers);
+			 printf("\n\tAmount deposited successfully.");
+			 printf("\n\n\tYour new balance is: %f",cust.accountbalance);
+			 fclose(customers);
+		      }
+
+		   else
+		      {
+			 printf("\n\tAccount Number doesn't exist\n");
+		      }
+		   fclose(customers);
+		}
+	     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&cstmenu);
+		     if(cstmenu=='b' || cstmenu=='B')
+			{
+		  clrscr();
+			  customer_menu();
+			}
+		else
+		{
+		 clrscr();
+		 deposit_amount();
+		}
+		 }
+	     while(cstmenu!='b' || cstmenu!='B');
+
+	    getch();
+       }
+
+
+void withdraw_amount()//function that allows customer to withdraw amount from account
+	{
+	    char acc_num[30];
+	    char custmenu;
+	      FILE *customers;
+		   customers=fopen("Regcustomer.txt","ab+");
+		   printf("\n\tEnter your account number:");
+		   scanf("%s",&acc_num);
+
+	    while(fread(&cust,sizeof(cust),1,customers))
+		{
+		    if(strcmp(acc_num,cust.Account_number)==0)//compares account number
+			{
+			   printf("\n\tYour balance is: %f",cust.accountbalance);
+			   customers=fopen("Regcustomer.txt","w");
+			   printf("\n\n\tEnter the amount you would like to withdraw:");
+			   scanf("%f",&cust.withdrawamount);
+			   cust.accountbalance-=cust.withdrawamount;//decreases the actual amount from account
+			   fwrite(&cust, sizeof(cust),1,customers);
+			   printf("\n\tAmount withdrawn successfully.");
+			   printf("\n\n\tYour new balance is: %f",cust.accountbalance);
+			   fclose(customers);
+			}
+		    else
+			{
+			   printf("\n\t\tAccount Number doesn't exist\n");
+			}
+		  fclose(customers);
+		}
+	     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&custmenu);
+		     if(custmenu=='b' || custmenu=='B')
+			{
+		  clrscr();
+			  customer_menu();
+			}
+		else
+		{
+		 clrscr();
+		 withdraw_amount();
+		}
+		 }
+	     while(custmenu!='b' || custmenu!='B');
+
+	    getch();
+	}
+
+
+void view_transactions()
+     {
+	   char cmenu;
+	   FILE *customers;
+	    clrscr ();
+
+		 customers=fopen("Regcustomer.txt","r");//opens the save file
+		 while(fread(&cust,sizeof(cust),1,customers))//read the data from file
+		 {
+		 printf("\n\tYour transaction:\n");
+		 printf("\n\t\tWithdrawn amount: %f",cust.withdrawamount);
+		 printf("\n\t\tDeposited amount: %f",cust.depositamount);
+		  printf("\n\n\tYour Current balance is: %f",cust.accountbalance);
+
+		 }
+		 fclose(customers);//closes the file
+
+	     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&cmenu);
+		     if(cmenu=='b' || cmenu=='B')
+		       {
+			  clrscr();
+			  customer_menu();
+			}
+		     else
+			{
+			  clrscr();
+			  view_transactions();
+			}
+		 }
+	     while(cmenu!='b' || cmenu!='B');
+
+	     getch();
+
+	  }
+
+
+
+
+
+
+
+void view_personal_information()//function to view personal information
+      {
+	  FILE *customers;
+	   char view;
+	      clrscr();
+	      printf("Your personal information as per bank record:\n\n");
+	      customers=fopen("Regcustomer.txt","ab+");
+	      printf("ID:%d\n Name:%s\n Address:%s\n Phone number:%s\n Citizenship number:%s\n User name:%s\n Password:%s\n Account number:%s\n Email account:%s\n",cust.ID,cust.Name,cust.Address,cust.phone_number,cust.Citizenship_number,cust.User_Name,cust.Password,cust.Account_number,cust.Email_account);
+	      fclose(customers);
+
+		     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&view);
+		     if(view=='b' || view=='B')
+			{
+		  clrscr();
+			  customer_menu();
+			}
+		else
+		{
+		 clrscr();
+		 view_personal_information();
+		}
+		 }
+	     while(view!='b' || view!='B');
+
+	  getch();
+       }
+
+
+void view_account_detail()//function to view account detail
+      {
+	 FILE *customers;
+	   char back;
+	     clrscr();
+	     printf("Your account detail:\n\n");
+	     customers=fopen("Regcustomer.txt","ab+");
+	     printf("ID:%d\n Name:%s\n Address:%s\n Phone number:%s\n Citizenship number:%s\n Gender:%s\n User name:%s\n Password:%s\n Account number:%s\n Account type:%s\n Email account:%s\n Current balance:%f\n",cust.ID,cust.Name,cust.Address,cust.phone_number,cust.Citizenship_number,cust.Gender,cust.User_Name,cust.Password,cust.Account_number,cust.Account_type,cust.Email_account,cust.accountbalance);
+	     fclose(customers);
+
+		     do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&back);
+		     if(back=='b' || back=='B')
+			{
+		  clrscr();
+			  customer_menu();
+			}
+		else
+		{
+		 clrscr();
+		 view_account_detail();
+		}
+		 }
+	     while(back!='b' || back!='B');
+
+	 getch();
+      }
+
+
+void update_personal_information()//function to update the personal information of customers
+    {
+	FILE *customers,*temp;//opens new file temp
+	   int id,found=0;
+	   char select;
+	    clrscr();
+	       customers=fopen("Regcustomer.txt","rb");
+	       temp=fopen("temp.txt","wb");
+	       printf("Enter your account ID:");
+	       scanf("%d",&id);
+		   while(fread(&cust,sizeof(cust),1,customers)==1)
+		      {
+			 if(feof(customers))
+			    {
+			       break;
+			     }
+			 if(cust.ID==id)
+			     {
+				found=1;
+				printf("\tEnter the following details to update your information:\n\n");
+				printf("\n\tEnter address:");
+				fflush(stdin);
+				scanf("%s",&cust.Address);
+
+				printf("\n\tEnter phone number:");
+				fflush(stdin);
+				scanf("%s",&cust.phone_number);
+
+				printf("\n\tEnter your email account:");
+				fflush(stdin);
+				scanf("%s",&cust.Email_account);
+
+				printf("\n\tEnter new password:");
+				fflush(stdin);
+				scanf("%s",&cust.Password);
+
+				printf("\n\tReenter new password:");
+				fflush(stdin);
+				scanf("%s",&cust.Retype_password);
+				fwrite(&cust,sizeof(cust),1,temp);
+				flushall();
+			     }
+			 else
+			     {
+				fwrite(&cust,sizeof(cust),1,temp);
+			     }
+		      }
+
+	       fclose(customers);
+	       fclose(temp);
+	       flushall();//flushes all the unnecessary data from files
+		   if (found==0)
+		       {
+			  printf("Sorry no record found\n\n");
+		       }
+		    else
+		       {
+			  customers=fopen("Regcustomer.txt","wb");
+			  temp=fopen("Temp.txt","rb");
+			  while(fread(&cust,sizeof(cust),1,temp))
+			      {
+				  if(feof(temp))//feof tests the end-of-file indicator
+				      {
+					 break;
+				      }
+			      }
+			  fwrite(&cust,sizeof(cust),1,customers);
+			  printf("\n\tYour personal information has been updated successfully.");
+
+		       }
+		   fclose(customers);//clloses customers file
+		   fclose(temp);//closes temp file
+		   flushall();//flushes all the unnecessary data from files
+
+do
+		 {
+		     printf("\n\n\tClick b or B to go back to customer menu : ");
+		     scanf("%s",&select);
+		     if(select=='b' || select=='B')
+			{
+		  clrscr();
+			  customer_menu();
+			}
+		else
+		{
+		 clrscr();
+		 update_personal_information();
+		}
+		 }
+	     while(select!='b' || select!='B');
+
+}
+
